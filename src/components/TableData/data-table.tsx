@@ -144,7 +144,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="hover:bg-sky-200 cursor-grab"
+                  className="hover:bg-red-200 cursor-grab"
                   onClick={() => {
                     navigator.clipboard.writeText(row.getValue("value"));
                   }}

@@ -5,7 +5,7 @@ import packageJson from "./package.json";
  */
 const manifest: chrome.runtime.ManifestV3 = {
   manifest_version: 3,
-  name: "Jt's React Table Pasta",
+  name: "jt react table clipboard",
   version: packageJson.version,
   description: packageJson.description,
   permissions: ["storage", "system.display"],
