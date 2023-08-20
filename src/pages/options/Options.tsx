@@ -1,8 +1,9 @@
 import React from "react";
 import "@pages/options/Options.css";
+import ImportExportPage from "@root/src/components/data/Options/page";
 
 const Options: React.FC = () => {
-  return <div className="container text-lime-400">Options</div>;
+  return <ImportExportPage />;
 };
 
 export default Options;

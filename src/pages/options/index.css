@@ -1,0 +1,36 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.twoColumnGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: space-around;
+  gap: 25vw;
+}
+
+.twoRowGrid {
+  display: grid;
+  /* grid-template-rows: repeat(2, 1fr); */
+  justify-content: center;
+}
+
+.threeColumnGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: space-around;
+  gap: 15vw;
+}
+
+.button {
+  height: 20px;
+}

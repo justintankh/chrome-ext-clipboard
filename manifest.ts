@@ -5,10 +5,10 @@ import packageJson from "./package.json";
  */
 const manifest: chrome.runtime.ManifestV3 = {
   manifest_version: 3,
-  name: packageJson.name,
+  name: "Jt's React Table Pasta",
   version: packageJson.version,
   description: packageJson.description,
-  permissions: ["storage"],
+  permissions: ["storage", "system.display"],
   options_page: "src/pages/options/index.html",
   background: {
     service_worker: "src/pages/background/index.js",
@@ -16,13 +16,28 @@ const manifest: chrome.runtime.ManifestV3 = {
   },
   action: {
     default_popup: "src/pages/popup/index.html",
-    default_icon: "icon-34.png",
+    default_icon: "avatar.png",
   },
-  chrome_url_overrides: {
-    newtab: "src/pages/newtab/index.html",
+  commands: {
+    "open-popup": {
+      suggested_key: {
+        mac: "Command+Shift+F",
+        default: "Ctrl+Shift+F",
+      },
+      description: "Open popup",
+    },
+    _execute_action: {
+      suggested_key: {
+        mac: "Command+Shift+S",
+        default: "Ctrl+Shift+S",
+      },
+    },
   },
+  // chrome_url_overrides: {
+  //   newtab: "src/pages/newtab/index.html",
+  // },
   icons: {
-    "128": "icon-128.png",
+    "128": "avatar.png",
   },
   content_scripts: [
     {
