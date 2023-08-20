@@ -74,11 +74,11 @@ export const columns: ColumnDef<TableData>[] = [
     accessorKey: "value",
     header: () => <div className="text-right">Value</div>,
     cell: ({ row }) => {
-      const value = parseFloat(row.getValue("value"));
+      const value = row.getValue("value").toString();
       return (
         <div
           className="text-left font-medium"
-          onClick={() => navigator.clipboard.writeText(value.toString())}
+          onClick={() => navigator.clipboard.writeText(value)}
         >
           {value}
         </div>

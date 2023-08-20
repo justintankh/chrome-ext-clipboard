@@ -5,7 +5,7 @@ import packageJson from "./package.json";
  */
 const manifest: chrome.runtime.ManifestV3 = {
   manifest_version: 3,
-  name: "React Table Clipboard v1.0.0",
+  name: "React Copy Table v1.0.0",
   version: packageJson.version,
   description: packageJson.description,
   permissions: ["storage", "system.display"],
