@@ -1,26 +1,7 @@
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { flexRender } from "@tanstack/react-table";
 
 import {
   Table,
@@ -30,46 +11,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { usePageNumber } from "./hooks/usePageNumber";
-import { ArrowDownWideNarrow } from "lucide-react";
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
+import { usePageNumber } from "../../hooks/usePageNumber";
+import { Pencil } from "lucide-react";
+import { DataTableProps } from "../helpers";
+import { useCustomTable } from "../../hooks/useCustomTable";
+import { useDispatch } from "react-redux";
+import { MODE, TableReducerActionType } from "../../data/reducer/types";
 
 export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const dispatch = useDispatch();
+  const { table } = useCustomTable({ columns, data });
 
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
-
-  const { pageNumber, setPageNumber } = usePageNumber({
+  const { pageNumber, updatePageNumber } = usePageNumber({
     canNextPage: table.getCanNextPage(),
     canPreviousPage: table.getCanPreviousPage(),
     hasResults: table.getRowModel().rows?.length > 0,
@@ -87,36 +43,19 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
           autoFocus
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-5">
-              <span className="mr-2">Columns</span>
-              <ArrowDownWideNarrow className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="fontWhite backgroundColour"
-            align="end"
-          >
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          variant="outline"
+          className="ml-5"
+          onClick={() => {
+            dispatch({
+              type: TableReducerActionType.SET_MODE,
+              payload: MODE.EDIT,
+            });
+          }}
+        >
+          <span className="mr-2">Edit</span>
+          <Pencil className="h-4 w-4" />
+        </Button>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -181,7 +120,7 @@ export function DataTable<TData, TValue>({
               variant="outline"
               size="sm"
               onClick={() => {
-                setPageNumber((prev) => prev - 1);
+                updatePageNumber((prev) => prev - 1);
                 table.previousPage();
               }}
               disabled={!table.getCanPreviousPage()}
@@ -192,7 +131,7 @@ export function DataTable<TData, TValue>({
               variant="outline"
               size="sm"
               onClick={() => {
-                setPageNumber((prev) => prev + 1);
+                updatePageNumber((prev) => prev + 1);
                 table.nextPage();
               }}
               disabled={!table.getCanNextPage()}

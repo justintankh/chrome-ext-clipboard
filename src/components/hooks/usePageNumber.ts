@@ -15,22 +15,16 @@ export function usePageNumber(props: {
     setPageNumber(FIRST_PAGE);
   }, [canPreviousPage]);
 
-  React.useEffect(() => {
-    /* When state has no data */
-    if (!canPreviousPage && !canNextPage) {
-      if (hasResults) {
-        setPageNumber(FIRST_PAGE);
-        return;
-      }
-      setPageNumber(0);
-    }
-  }, [canNextPage]);
+  // React.useEffect(() => {
+  //   /* When state has no data */
+  //   if (!canPreviousPage && !canNextPage) {
+  //     if (hasResults) {
+  //       setPageNumber(FIRST_PAGE);
+  //     } else {
+  //       setPageNumber(0);
+  //     }
+  //   }
+  // }, [canNextPage]);
 
-  //   React.useEffect(() => {
-  //     /* When state has no data */
-  //     if (pageNumber === 1) return;
-  //     setPageNumber(0);
-  //   }, [hasResults]);
-
-  return { pageNumber, setPageNumber };
+  return { pageNumber, updatePageNumber: setPageNumber };
 }

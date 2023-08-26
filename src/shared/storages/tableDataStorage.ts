@@ -1,4 +1,4 @@
-import { TableData } from "@root/src/components/TableData/columns";
+import { TableData } from "@root/src/components/Table/helpers";
 import {
   BaseStorage,
   createStorage,

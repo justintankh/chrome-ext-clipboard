@@ -1,8 +1,8 @@
 import tableDataStorage from "@root/src/shared/storages/tableDataStorage";
 import * as React from "react";
-import { TableData } from "../TableData/columns";
+import { TableData } from "../Table/helpers";
 
-export function useLoadTableData() {
+export function useTableData() {
   const [localTableData, setLocalTableData] = React.useState<TableData[]>([]);
   const isLocalData = localTableData && localTableData.length > 0;
 
@@ -19,7 +19,7 @@ export function useLoadTableData() {
     console.log("after: ", await tableDataStorage.get());
   }
 
-  const handleImportData = (e) => {
+  function handleImportData(e) {
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = (e) => {
@@ -37,7 +37,7 @@ export function useLoadTableData() {
         console.error({ error });
       }
     };
-  };
+  }
 
   function handleExportData(e: any) {
     // create file in browser
@@ -58,11 +58,27 @@ export function useLoadTableData() {
     URL.revokeObjectURL(href);
   }
 
+  function addData(value: TableData) {
+    const newTableData = [...localTableData, value];
+    tableDataStorage.set(newTableData);
+    setLocalTableData(newTableData);
+  }
+
+  function removeData(idList: string[]) {
+    const newTableData = localTableData.filter(
+      (item) => !idList.includes(item.id)
+    );
+    tableDataStorage.set(newTableData);
+    setLocalTableData(newTableData);
+  }
+
   return {
     isLocalData,
     localTableData,
     handleClearData,
     handleImportData,
     handleExportData,
+    addData,
+    removeData,
   };
 }
