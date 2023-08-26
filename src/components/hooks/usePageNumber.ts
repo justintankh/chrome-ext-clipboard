@@ -15,16 +15,6 @@ export function usePageNumber<T>(table: Table<T>) {
     setPageNumber(FIRST_PAGE);
   }, [canPreviousPage]);
 
-  // React.useEffect(() => {
-  //   /* When state has no data */
-  //   if (!canPreviousPage && !canNextPage) {
-  //     if (hasResults) {
-  //       setPageNumber(FIRST_PAGE);
-  //     } else {
-  //       setPageNumber(0);
-  //     }
-  //   }
-  // }, [canNextPage]);
-
-  return { pageNumber, updatePageNumber: setPageNumber };
+  const resolvedPageNumber = hasResults ? pageNumber : 0;
+  return { pageNumber: resolvedPageNumber, updatePageNumber: setPageNumber };
 }
