@@ -2,6 +2,7 @@ import tableDataStorage from "@root/src/shared/storages/tableDataStorage";
 import * as React from "react";
 import { TableData, sortByNewestFirst } from "../Table/helpers";
 import { TableDataNoId } from "../data/reducer/types";
+import { alertDataType } from "../Options/const";
 
 export function useTableData() {
   const [localTableData, setLocalTableData] = React.useState<TableData[]>([]);
@@ -41,6 +42,9 @@ export function useTableData() {
         setLocalTableData(importedData);
       } catch (error) {
         console.error({ error });
+        alert(
+          "Upload failed. Please upload a file of type " + alertDataType + "."
+        );
       }
     };
   }
@@ -85,7 +89,7 @@ export function useTableData() {
   );
 
   return {
-    isLocalData,
+    isLoaded: isLocalData,
     tableData,
     handleClearData,
     handleImportData,

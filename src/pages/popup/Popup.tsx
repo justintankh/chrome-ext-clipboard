@@ -17,7 +17,7 @@ const RenderTable = () => {
   );
 
   const {
-    states: { isLocalData },
+    states: { isLoaded: isLocalData },
   } = useContext(TableContext);
 
   return (

@@ -1,12 +1,12 @@
+import { Table } from "@tanstack/react-table";
 import * as React from "react";
 
-export function usePageNumber(props: {
-  canPreviousPage: boolean;
-  canNextPage: boolean;
-  hasResults: boolean;
-}) {
+export function usePageNumber<T>(table: Table<T>) {
   const FIRST_PAGE = 1;
-  const { canPreviousPage, canNextPage, hasResults } = props;
+  const canNextPage = table.getCanNextPage();
+  const canPreviousPage = table.getCanPreviousPage();
+  const hasResults = table.getRowModel().rows?.length > 0;
+
   const [pageNumber, setPageNumber] = React.useState(FIRST_PAGE);
 
   React.useEffect(() => {

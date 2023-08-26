@@ -2,8 +2,12 @@ import * as React from "react";
 import { useTableData } from "../hooks/useTableData";
 
 const ImportExportPage: React.FC = () => {
-  const { handleImportData, handleClearData, handleExportData, isLocalData } =
-    useTableData();
+  const {
+    handleImportData,
+    handleClearData,
+    handleExportData,
+    isLoaded: isLocalData,
+  } = useTableData();
 
   const dataType = `{
       id: string;

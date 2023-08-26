@@ -5,7 +5,7 @@ import { useContext } from "react";
 
 function DisplayTable() {
   const {
-    states: { localTableData },
+    states: { tableData: localTableData },
   } = useContext(TableContext);
 
   return (

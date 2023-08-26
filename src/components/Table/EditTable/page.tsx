@@ -5,7 +5,7 @@ import { TableContext } from "../../data/context";
 
 function EditTable() {
   const {
-    states: { localTableData },
+    states: { tableData: localTableData },
   } = useContext(TableContext);
 
   return (

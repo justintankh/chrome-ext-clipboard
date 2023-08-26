@@ -19,7 +19,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { usePageNumber } from "../../hooks/usePageNumber";
-import { Download, MoreVertical, Save, Upload } from "lucide-react";
+import {
+  Accessibility,
+  ArrowBigLeft,
+  Book,
+  ChevronLeftSquare,
+  CornerDownLeft,
+  Download,
+  FormInput,
+  MoreVertical,
+  Save,
+  SaveAll,
+  Upload,
+} from "lucide-react";
 import { DataTableProps, clearSelected, isAnyRowSelected } from "../helpers";
 import { useCustomTable } from "../../hooks/useCustomTable";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +42,8 @@ import {
   TableStore,
 } from "../../data/reducer/types";
 import { useEditRow } from "./useEditRow";
+import { useContext, useRef } from "react";
+import { TableContext } from "../../data/context";
 
 export function DataTable<TData, TValue>({
   columns,
@@ -39,14 +53,17 @@ export function DataTable<TData, TValue>({
   const currentFocus = useSelector<TableStore, TableStore["focusInput"]>(
     (state) => state.focusInput
   );
-  const { table } = useCustomTable({ columns, data });
-  const { RenderEditRow, onDelete } = useEditRow(table);
+  const {
+    methods: { handleImportData, handleExportData },
+    states: { tableData },
+  } = useContext(TableContext);
 
-  const { pageNumber, updatePageNumber } = usePageNumber({
-    canNextPage: table.getCanNextPage(),
-    canPreviousPage: table.getCanPreviousPage(),
-    hasResults: table.getRowModel().rows?.length > 0,
-  });
+  const { table } = useCustomTable({ columns, data });
+
+  const { RenderEditRow, onDelete } = useEditRow(table);
+  const { pageNumber, updatePageNumber } = usePageNumber(table);
+
+  const fileInputRef = useRef(null);
 
   return (
     <div>
@@ -67,30 +84,28 @@ export function DataTable<TData, TValue>({
           autoFocus={currentFocus === FocusInput.Filter}
         />
 
-        {/* Download button */}
+        {/* Upload button */}
+        <input
+          className="hidden"
+          type="file"
+          accept=".json"
+          ref={fileInputRef}
+          onChange={handleImportData}
+        />
         <Button
           variant="outline"
           className="ml-5"
-          onClick={() => {
-            dispatch({
-              type: TableReducerActionType.SET_MODE,
-              payload: Mode.Display,
-            });
-          }}
+          onClick={() => fileInputRef.current.click()}
         >
           <Upload className="h-4 w-4" />
         </Button>
 
-        {/* Upload button */}
+        {/* Download button */}
         <Button
           variant="outline"
           className="ml-2"
-          onClick={() => {
-            dispatch({
-              type: TableReducerActionType.SET_MODE,
-              payload: Mode.Display,
-            });
-          }}
+          onClick={handleExportData}
+          disabled={!tableData.length}
         >
           <Download className="h-4 w-4" />
         </Button>
@@ -127,9 +142,9 @@ export function DataTable<TData, TValue>({
             <DropdownMenuCheckboxItem
               key={1}
               checked={false}
-              disabled={!isAnyRowSelected(table)}
+              disabled={true}
               className={
-                !isAnyRowSelected(table)
+                true
                   ? "editColumnMenuItem-disabled"
                   : "editColumnMenuItem-active"
               }
@@ -142,9 +157,9 @@ export function DataTable<TData, TValue>({
             <DropdownMenuCheckboxItem
               key={1}
               checked={false}
-              disabled={!isAnyRowSelected(table)}
+              disabled={true}
               className={
-                !isAnyRowSelected(table)
+                true
                   ? "editColumnMenuItem-disabled"
                   : "editColumnMenuItem-active"
               }

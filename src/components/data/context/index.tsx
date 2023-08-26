@@ -9,24 +9,13 @@ export const TableContext = React.createContext<TableContextType>({} as any);
 export const TableContextProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [searchTerm, setSearchTerm] = React.useState<string>("");
-  const [showId, setShowId] = React.useState<number>(-1);
-
-  const dispatch = useDispatch();
-
-  const selectedRows = useSelector<TableStore, TableStore["selectedRows"]>(
-    (state) => state.selectedRows
-  );
-
-  const tableData = useSelector<TableStore, TableStore["tableData"]>(
-    (state) => state.tableData
-  );
-
   const {
-    tableData: localTableData,
-    isLocalData,
+    tableData,
+    isLoaded,
     addData,
     removeData,
+    handleImportData,
+    handleExportData,
   } = useTableData();
 
   // useEffect(() => {}, [
@@ -36,12 +25,14 @@ export const TableContextProvider: React.FC<{
 
   const contextValues: TableContextType = {
     states: {
-      isLocalData,
-      localTableData,
+      isLoaded,
+      tableData,
     },
     methods: {
       addData,
       removeData,
+      handleImportData,
+      handleExportData,
     },
   };
 

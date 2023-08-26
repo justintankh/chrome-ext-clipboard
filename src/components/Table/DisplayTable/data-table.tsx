@@ -23,13 +23,9 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const dispatch = useDispatch();
-  const { table } = useCustomTable({ columns, data });
 
-  const { pageNumber, updatePageNumber } = usePageNumber({
-    canNextPage: table.getCanNextPage(),
-    canPreviousPage: table.getCanPreviousPage(),
-    hasResults: table.getRowModel().rows?.length > 0,
-  });
+  const { table } = useCustomTable({ columns, data });
+  const { pageNumber, updatePageNumber } = usePageNumber(table);
 
   return (
     <div>
