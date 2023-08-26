@@ -19,20 +19,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { usePageNumber } from "../../hooks/usePageNumber";
-import {
-  Accessibility,
-  ArrowBigLeft,
-  Book,
-  ChevronLeftSquare,
-  CornerDownLeft,
-  Download,
-  FormInput,
-  MoreVertical,
-  Save,
-  SaveAll,
-  Upload,
-} from "lucide-react";
-import { DataTableProps, clearSelected, isAnyRowSelected } from "../helpers";
+import { Download, MoreVertical, Save, Upload } from "lucide-react";
+import { DataTableProps, isAnyRowSelected } from "../helpers";
 import { useCustomTable } from "../../hooks/useCustomTable";
 import { useDispatch, useSelector } from "react-redux";
 import {

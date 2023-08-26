@@ -73,3 +73,7 @@
   padding-right: 5px;
   background-color: lightgrey;
 }
+
+.backgroundOnHover:hover {
+  background-color: rgb(254 202 202);
+}
