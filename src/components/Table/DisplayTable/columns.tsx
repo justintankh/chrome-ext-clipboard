@@ -37,12 +37,10 @@ export const columns: ColumnDef<TableData>[] = [
     header: () => <div className="text-right">Value</div>,
     cell: ({ row }) => {
       const value = row.getValue("value").toString();
+
       return (
-        <div
-          className="text-left font-medium"
-          onClick={() => navigator.clipboard.writeText(value)}
-        >
-          {value}
+        <div className="copiedTextParent">
+          <div className="text-left font-medium">{value}</div>
         </div>
       );
     },

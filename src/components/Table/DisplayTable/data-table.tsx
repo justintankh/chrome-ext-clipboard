@@ -13,10 +13,10 @@ import {
 } from "@/components/ui/table";
 import { usePageNumber } from "../../hooks/usePageNumber";
 import { Pencil } from "lucide-react";
-import { DataTableProps } from "../helpers";
+import { DataTableProps, clearSelected, handleRowOnClick } from "../helpers";
 import { useCustomTable } from "../../hooks/useCustomTable";
 import { useDispatch } from "react-redux";
-import { MODE, TableReducerActionType } from "../../data/reducer/types";
+import { Mode, TableReducerActionType } from "../../data/reducer/types";
 
 export function DataTable<TData, TValue>({
   columns,
@@ -49,7 +49,7 @@ export function DataTable<TData, TValue>({
           onClick={() => {
             dispatch({
               type: TableReducerActionType.SET_MODE,
-              payload: MODE.EDIT,
+              payload: Mode.Edit,
             });
           }}
         >
@@ -77,26 +77,31 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="copiedTextParent">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="hover:bg-red-200 cursor-grab"
-                  onClick={() => {
-                    navigator.clipboard.writeText(row.getValue("value"));
-                  }}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <>
+                  {row.getIsSelected() && (
+                    <div className={"copiedTextChild"}>Copied !</div>
+                  )}
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="hover:bg-red-200 cursor-grab"
+                    onClick={() => {
+                      handleRowOnClick(row);
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </>
               ))
             ) : (
               <TableRow>

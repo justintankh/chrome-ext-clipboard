@@ -1,16 +1,22 @@
 import tableDataStorage from "@root/src/shared/storages/tableDataStorage";
 import * as React from "react";
-import { TableData } from "../Table/helpers";
+import { TableData, sortByNewestFirst } from "../Table/helpers";
+import { TableDataNoId } from "../data/reducer/types";
 
 export function useTableData() {
   const [localTableData, setLocalTableData] = React.useState<TableData[]>([]);
   const isLocalData = localTableData && localTableData.length > 0;
 
-  React.useEffect(() => {
-    tableDataStorage.get().then((data) => {
-      setLocalTableData(data);
-    });
-  }, []);
+  React.useEffect(
+    () => {
+      tableDataStorage.get().then((data) => {
+        setLocalTableData(data);
+      });
+    },
+    [
+      // Load data from cache on mount
+    ]
+  );
 
   async function handleClearData() {
     console.log("before: ", await tableDataStorage.get());
@@ -58,8 +64,9 @@ export function useTableData() {
     URL.revokeObjectURL(href);
   }
 
-  function addData(value: TableData) {
-    const newTableData = [...localTableData, value];
+  function addData(value: TableDataNoId) {
+    const newData = { ...value, id: Date.now().toString() };
+    const newTableData = [...localTableData, newData];
     tableDataStorage.set(newTableData);
     setLocalTableData(newTableData);
   }
@@ -68,13 +75,18 @@ export function useTableData() {
     const newTableData = localTableData.filter(
       (item) => !idList.includes(item.id)
     );
+    console.log({ idList, newTableData });
     tableDataStorage.set(newTableData);
     setLocalTableData(newTableData);
   }
 
+  const tableData = localTableData.sort((a, b) =>
+    sortByNewestFirst(a.id, b.id)
+  );
+
   return {
     isLocalData,
-    localTableData,
+    tableData,
     handleClearData,
     handleImportData,
     handleExportData,

@@ -1,54 +1,40 @@
 import { TableData } from "../../Table/helpers";
 
-export enum MODE {
-  DISPLAY = "DISPLAY",
-  EDIT = "EDIT",
+// Types
+export enum Mode {
+  Display = "Display",
+  Edit = "Edit",
+}
+export enum FocusInput {
+  Filter = "Filter",
+  Category = "Category",
+  Tag = "Tag",
+  Value = "Value",
 }
 
-export type TableReducerState = {
+export type TableDataNoId = Omit<TableData, "id">;
+
+// Reducer types
+export type TableStore = {
   tableData: TableData[];
   selectedRows: string[];
-  mode: MODE;
-  //   search: string;
-  //   selected: number;
+  mode: Mode;
+  focusInput: FocusInput;
 };
 
 export enum TableReducerActionType {
-  ADD_ROW = "ADD_ROW",
-  REMOVE_ROW = "REMOVE_ROW",
-  SET_SELECTED = "SET_SELECTED",
-  SET_SEARCH = "SET_SEARCH",
+  SET_FOCUS = "SET_FOCUS",
   SET_MODE = "SET_MODE",
 }
 
-type AddRowActionType = {
-  type: TableReducerActionType.ADD_ROW;
-  payload: Omit<TableData, "id">;
-};
-
-type RemoveRowActionType = {
-  type: TableReducerActionType.REMOVE_ROW;
-  payload: TableData["id"];
-};
-
-type SetSelectedActionType = {
-  type: TableReducerActionType.SET_SELECTED;
-  payload: TableData["id"][];
-};
-
-type SetSearchActionType = {
-  type: TableReducerActionType.SET_SEARCH;
-  payload: string;
-};
-
 type SetModeActionType = {
   type: TableReducerActionType.SET_MODE;
-  payload: MODE;
+  payload: Mode;
 };
 
-export type TableReducerAction =
-  | AddRowActionType
-  | RemoveRowActionType
-  | SetSelectedActionType
-  | SetSearchActionType
-  | SetModeActionType;
+type SetFocusActionType = {
+  type: TableReducerActionType.SET_FOCUS;
+  payload: FocusInput;
+};
+
+export type TableReducerAction = SetModeActionType | SetFocusActionType;

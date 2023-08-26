@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TableContextType } from "./types";
 import { useDispatch, useSelector } from "react-redux";
-import { TableReducerState } from "../reducer/types";
+import { TableStore } from "../reducer/types";
 import { useTableData } from "../../hooks/useTableData";
 
 export const TableContext = React.createContext<TableContextType>({} as any);
@@ -13,25 +13,25 @@ export const TableContextProvider: React.FC<{
   const [showId, setShowId] = React.useState<number>(-1);
 
   const dispatch = useDispatch();
-  const selectedRows = useSelector<
-    TableReducerState,
-    TableReducerState["selectedRows"]
-  >((state) => state.selectedRows);
 
-  const { localTableData, isLocalData, addData, removeData } = useTableData();
+  const selectedRows = useSelector<TableStore, TableStore["selectedRows"]>(
+    (state) => state.selectedRows
+  );
 
-  // useEffect(() => {
-  //   dispatch({
-  //     type: ReducerActionType.ADD_ROW,
-  //     payload: filteredPokemon(pokemonList, search),
-  //   });
-  // }, [
-  //   /* For state to set on load */
-  //   pokemonList,
-  //   /* For lazy loading to update */
-  //   slice,
-  //   /* For text filtered pokemon to update */
-  //   search,
+  const tableData = useSelector<TableStore, TableStore["tableData"]>(
+    (state) => state.tableData
+  );
+
+  const {
+    tableData: localTableData,
+    isLocalData,
+    addData,
+    removeData,
+  } = useTableData();
+
+  // useEffect(() => {}, [
+  //   /* To sync with local data */
+  //   tableData,
   // ]);
 
   const contextValues: TableContextType = {

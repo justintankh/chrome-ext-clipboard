@@ -1,19 +1,7 @@
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
 
 import {
   DropdownMenu,
@@ -31,18 +19,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { usePageNumber } from "../../hooks/usePageNumber";
-import { MoreVertical, PencilLine, Save } from "lucide-react";
-import { DataTableProps, clearSelected, isSomeRowSelected } from "../helpers";
+import { Download, MoreVertical, Save, Upload } from "lucide-react";
+import { DataTableProps, clearSelected, isAnyRowSelected } from "../helpers";
 import { useCustomTable } from "../../hooks/useCustomTable";
-import { useDispatch } from "react-redux";
-import { MODE, TableReducerActionType } from "../../data/reducer/types";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  FocusInput,
+  Mode,
+  TableReducerActionType,
+  TableStore,
+} from "../../data/reducer/types";
+import { useEditRow } from "./useEditRow";
 
 export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
   const dispatch = useDispatch();
+  const currentFocus = useSelector<TableStore, TableStore["focusInput"]>(
+    (state) => state.focusInput
+  );
   const { table } = useCustomTable({ columns, data });
+  const { RenderEditRow, onDelete } = useEditRow(table);
 
   const { pageNumber, updatePageNumber } = usePageNumber({
     canNextPage: table.getCanNextPage(),
@@ -60,26 +58,64 @@ export function DataTable<TData, TValue>({
             table.getColumn("tag")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
-          autoFocus
+          onFocus={() => {
+            dispatch({
+              type: TableReducerActionType.SET_FOCUS,
+              payload: FocusInput.Filter,
+            });
+          }}
+          autoFocus={currentFocus === FocusInput.Filter}
         />
 
+        {/* Download button */}
         <Button
           variant="outline"
           className="ml-5"
           onClick={() => {
             dispatch({
               type: TableReducerActionType.SET_MODE,
-              payload: MODE.DISPLAY,
+              payload: Mode.Display,
+            });
+          }}
+        >
+          <Upload className="h-4 w-4" />
+        </Button>
+
+        {/* Upload button */}
+        <Button
+          variant="outline"
+          className="ml-2"
+          onClick={() => {
+            dispatch({
+              type: TableReducerActionType.SET_MODE,
+              payload: Mode.Display,
+            });
+          }}
+        >
+          <Download className="h-4 w-4" />
+        </Button>
+
+        {/* Return back to Display Table */}
+        <Button
+          variant="outline"
+          className="ml-2"
+          onClick={() => {
+            dispatch({
+              type: TableReducerActionType.SET_MODE,
+              payload: Mode.Display,
             });
           }}
         >
           <Save className="h-4 w-4" />
         </Button>
 
+        {/* Options dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-2">
-              <span className="mr-2">Options</span>
+            <Button
+              variant="outline"
+              className={isAnyRowSelected(table) ? "ml-2 bg-red-200" : "ml-2"}
+            >
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -91,9 +127,9 @@ export function DataTable<TData, TValue>({
             <DropdownMenuCheckboxItem
               key={1}
               checked={false}
-              disabled={!isSomeRowSelected(table)}
+              disabled={!isAnyRowSelected(table)}
               className={
-                !isSomeRowSelected(table)
+                !isAnyRowSelected(table)
                   ? "editColumnMenuItem-disabled"
                   : "editColumnMenuItem-active"
               }
@@ -106,9 +142,9 @@ export function DataTable<TData, TValue>({
             <DropdownMenuCheckboxItem
               key={1}
               checked={false}
-              disabled={!isSomeRowSelected(table)}
+              disabled={!isAnyRowSelected(table)}
               className={
-                !isSomeRowSelected(table)
+                !isAnyRowSelected(table)
                   ? "editColumnMenuItem-disabled"
                   : "editColumnMenuItem-active"
               }
@@ -121,14 +157,15 @@ export function DataTable<TData, TValue>({
             <DropdownMenuCheckboxItem
               key={1}
               checked={false}
-              disabled={!isSomeRowSelected(table)}
+              disabled={!isAnyRowSelected(table)}
               className={
-                !isSomeRowSelected(table)
+                !isAnyRowSelected(table)
                   ? "editColumnMenuItem-disabled"
                   : "editColumnMenuItem-active"
               }
               onCheckedChange={(value) => {
                 // TODO : Implement deletion
+                onDelete();
               }}
             >
               {"❌ Delete"}
@@ -168,6 +205,7 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
+            <RenderEditRow />
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -179,12 +217,14 @@ export function DataTable<TData, TValue>({
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+                    <>
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    </>
                   ))}
                 </TableRow>
               ))

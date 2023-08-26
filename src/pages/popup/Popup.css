@@ -32,6 +32,28 @@
   justify-content: space-between;
 }
 
+/* Display Table */
+
+.copiedTextParent {
+  position: relative;
+}
+
+.copiedTextChild {
+  position: absolute;
+  right: 2em;
+
+  /* Border is the new background */
+  background: none;
+  color: rgb(231, 140, 140);
+  /* color: rgb(231, 140, 140); */
+  font-size: larger;
+  font-weight: bolder;
+
+  /* Rotate from top left corner (not default) */
+  transform-origin: 0 0;
+  transform: rotate(-25deg);
+}
+
 /* Edit Table  */
 
 .editColumnMenuItem-active {

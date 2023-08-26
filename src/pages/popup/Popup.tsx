@@ -7,15 +7,12 @@ import TableStoreProvider from "@root/src/components/data/provider";
 import DisplayTable from "@root/src/components/Table/DisplayTable/page";
 import EditTable from "@root/src/components/Table/EditTable/page";
 import { useSelector } from "react-redux";
-import {
-  MODE,
-  TableReducerState,
-} from "@root/src/components/data/reducer/types";
+import { Mode, TableStore } from "@root/src/components/data/reducer/types";
 import { TableContext } from "@root/src/components/data/context";
 import ImportExportPage from "@root/src/components/Options/page";
 
 const RenderTable = () => {
-  const mode = useSelector<TableReducerState, TableReducerState["mode"]>(
+  const mode = useSelector<TableStore, TableStore["mode"]>(
     (state) => state.mode
   );
 
@@ -25,9 +22,9 @@ const RenderTable = () => {
 
   return (
     <>
-      {!isLocalData && <div>Loading...</div>}
-      {!isLocalData && <ImportExportPage />}
-      {isLocalData && mode === MODE.DISPLAY ? <DisplayTable /> : <EditTable />}
+      {/* {!isLocalData && <div>Loading...</div>} */}
+      {/* {!isLocalData && <ImportExportPage />} */}
+      {mode === Mode.Display ? <DisplayTable /> : <EditTable />}
     </>
   );
 };

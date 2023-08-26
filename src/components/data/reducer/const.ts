@@ -1,7 +1,8 @@
-import { MODE, TableReducerState } from "./types";
+import { FocusInput, Mode, TableStore } from "./types";
 
-export const initialState: TableReducerState = {
+export const initialState: TableStore = {
   tableData: [],
   selectedRows: [],
-  mode: MODE.DISPLAY,
+  mode: Mode.Display,
+  focusInput: FocusInput.Filter,
 };

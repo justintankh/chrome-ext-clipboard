@@ -28,6 +28,7 @@ export const columns: ColumnDef<TableData>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
+        className="mr-5"
       />
     ),
     enableSorting: false,
@@ -67,12 +68,9 @@ export const columns: ColumnDef<TableData>[] = [
     cell: ({ row }) => {
       const value = row.getValue("value").toString();
       return (
-        <div
-          className="text-left font-medium"
-          onClick={() => navigator.clipboard.writeText(value)}
-        >
-          {value}
-        </div>
+        <>
+          <div className="text-left font-medium">{value}</div>
+        </>
       );
     },
   },

@@ -2,32 +2,24 @@ import { initialState } from "./const";
 import {
   TableReducerAction as reducerAction,
   TableReducerActionType,
-  TableReducerState,
+  TableStore,
 } from "./types";
 import { configureStore } from "@reduxjs/toolkit";
 
 const tableReducer = (
-  state: TableReducerState = initialState,
+  state: TableStore = initialState,
   action: reducerAction
-): TableReducerState => {
+): TableStore => {
   switch (action.type) {
-    case TableReducerActionType.ADD_ROW:
-      return {
-        ...state,
-      };
-    case TableReducerActionType.SET_SEARCH:
-      return {
-        ...state,
-      };
-    case TableReducerActionType.SET_SELECTED:
-      return {
-        ...state,
-        selectedRows: action.payload,
-      };
     case TableReducerActionType.SET_MODE:
       return {
         ...state,
         mode: action.payload,
+      };
+    case TableReducerActionType.SET_FOCUS:
+      return {
+        ...state,
+        focusInput: action.payload,
       };
     default:
       return state;
@@ -35,7 +27,7 @@ const tableReducer = (
 };
 
 export const useTableStore = () =>
-  configureStore<TableReducerState, reducerAction>({
+  configureStore<TableStore, reducerAction>({
     reducer: tableReducer,
     preloadedState: initialState,
   });
