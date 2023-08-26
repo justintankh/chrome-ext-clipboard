@@ -17,14 +17,17 @@ export type TableDataNoId = Omit<TableData, "id">;
 // Reducer types
 export type TableStore = {
   tableData: TableData[];
-  selectedRows: string[];
   mode: Mode;
   focusInput: FocusInput;
+  categories: string[];
+  filter: string[];
 };
 
 export enum TableReducerActionType {
   SET_FOCUS = "SET_FOCUS",
   SET_MODE = "SET_MODE",
+  SET_CATEGORY = "SET_CATEGORY",
+  SET_FILTER = "SET_FILTER",
 }
 
 type SetModeActionType = {
@@ -37,4 +40,18 @@ type SetFocusActionType = {
   payload: FocusInput;
 };
 
-export type TableReducerAction = SetModeActionType | SetFocusActionType;
+type SetCategoryActionType = {
+  type: TableReducerActionType.SET_CATEGORY;
+  payload: string[];
+};
+
+type SetCategoryFilterActionType = {
+  type: TableReducerActionType.SET_FILTER;
+  payload: string[];
+};
+
+export type TableReducerAction =
+  | SetModeActionType
+  | SetFocusActionType
+  | SetCategoryActionType
+  | SetCategoryFilterActionType;

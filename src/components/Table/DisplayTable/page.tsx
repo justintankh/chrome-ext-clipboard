@@ -1,7 +1,7 @@
-import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { TableContext } from "../../data/context";
 import { useContext } from "react";
+import { useColumns } from "./useColumns";
 
 function DisplayTable() {
   const {
@@ -11,7 +11,7 @@ function DisplayTable() {
   return (
     <div className="fontWhite">
       <div className="infoBlock"></div>
-      <DataTable columns={columns} data={localTableData} />
+      <DataTable columns={useColumns()} data={localTableData} />
     </div>
   );
 }

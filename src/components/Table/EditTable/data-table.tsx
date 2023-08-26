@@ -155,7 +155,7 @@ export function DataTable<TData, TValue>({
               {"⭐️ Add"}
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
-              key={1}
+              key={2}
               checked={false}
               disabled={true}
               className={
@@ -170,7 +170,7 @@ export function DataTable<TData, TValue>({
               {"⭐️ Remove"}
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
-              key={1}
+              key={3}
               checked={false}
               disabled={!isAnyRowSelected(table)}
               className={
@@ -184,17 +184,6 @@ export function DataTable<TData, TValue>({
               }}
             >
               {"❌ Delete"}
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem
-              key={1}
-              checked={false}
-              disabled={false}
-              className={"editColumnMenuItem-active"}
-              onCheckedChange={(_) => {
-                clearSelected(table);
-              }}
-            >
-              {"⃠ Select"}
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>

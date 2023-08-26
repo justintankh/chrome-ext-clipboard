@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { usePageNumber } from "../../hooks/usePageNumber";
 import { Pencil } from "lucide-react";
-import { DataTableProps, clearSelected, handleRowOnClick } from "../helpers";
+import { DataTableProps, handleRowOnClick } from "../helpers";
 import { useCustomTable } from "../../hooks/useCustomTable";
 import { useDispatch } from "react-redux";
 import { Mode, TableReducerActionType } from "../../data/reducer/types";

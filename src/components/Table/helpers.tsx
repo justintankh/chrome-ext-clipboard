@@ -43,7 +43,15 @@ export function sortByNewestFirst(a: string, b: string) {
 }
 
 export function getUniqueCategories<T>(table: Table<T>): string[] {
-  return table
-    .getRowModel()
-    .rows.map((row) => row.getValue("category") as string);
+  return Array.from(
+    new Set(
+      table
+        .getCoreRowModel()
+        .rows.map((row) => row.getValue("category") as string)
+    )
+  );
+}
+
+export function getUniqueCategoriesTableData<T>(data: TableData[]): string[] {
+  return Array.from(new Set(data.map((data) => data.category)));
 }

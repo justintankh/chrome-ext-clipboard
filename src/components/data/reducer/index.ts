@@ -21,6 +21,16 @@ const tableReducer = (
         ...state,
         focusInput: action.payload,
       };
+    case TableReducerActionType.SET_CATEGORY:
+      return {
+        ...state,
+        categories: action.payload,
+      };
+    case TableReducerActionType.SET_FILTER:
+      return {
+        ...state,
+        filter: action.payload,
+      };
     default:
       return state;
   }

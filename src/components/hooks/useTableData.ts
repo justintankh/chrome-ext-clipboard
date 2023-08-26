@@ -1,17 +1,29 @@
 import tableDataStorage from "@root/src/shared/storages/tableDataStorage";
 import * as React from "react";
-import { TableData, sortByNewestFirst } from "../Table/helpers";
-import { TableDataNoId } from "../data/reducer/types";
+import {
+  TableData,
+  getUniqueCategoriesTableData,
+  sortByNewestFirst,
+} from "../Table/helpers";
+import { TableDataNoId, TableReducerActionType } from "../data/reducer/types";
 import { alertDataType } from "../Options/const";
+import { useDispatch } from "react-redux";
 
 export function useTableData() {
   const [localTableData, setLocalTableData] = React.useState<TableData[]>([]);
   const isLocalData = localTableData && localTableData.length > 0;
 
+  const dispatch = useDispatch();
+
   React.useEffect(
     () => {
       tableDataStorage.get().then((data) => {
         setLocalTableData(data);
+        console.log("rendered");
+        dispatch({
+          type: TableReducerActionType.SET_CATEGORY,
+          payload: getUniqueCategoriesTableData(data),
+        });
       });
     },
     [
