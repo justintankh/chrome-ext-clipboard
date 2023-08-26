@@ -4,14 +4,14 @@ import "@pages/popup/Popup.css";
 import useStorage from "@src/shared/hooks/useStorage";
 import exampleThemeStorage from "@src/shared/storages/exampleThemeStorage";
 import withSuspense from "@src/shared/hoc/withSuspense";
-import DemoPage from "@root/src/components/TableData/page";
+import PopupPage from "@root/src/components/TableData/page";
 
 const Popup = () => {
   const theme = useStorage(exampleThemeStorage);
 
   return (
     <div className="App">
-      <DemoPage />
+      <PopupPage />
     </div>
   );
 };

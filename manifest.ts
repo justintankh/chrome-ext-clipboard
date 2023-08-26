@@ -8,7 +8,7 @@ const manifest: chrome.runtime.ManifestV3 = {
   name: "React Copy Table v1.0.0",
   version: packageJson.version,
   description: packageJson.description,
-  permissions: ["storage", "system.display"],
+  permissions: ["storage", "system.display", "tabs", "contextMenus"],
   options_page: "src/pages/options/index.html",
   background: {
     service_worker: "src/pages/background/index.js",

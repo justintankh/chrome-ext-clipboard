@@ -1,10 +1,9 @@
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
-import { useLoadTableData } from "../data/hooks/useLoadTableData";
-import ImportExportPage from "../data/Options/page";
+import { useLoadTableData } from "../hooks/useLoadTableData";
+import ImportExportPage from "../Options/page";
 
-export default function DemoPage() {
-  // const [tableData, setTableData] = useState<TableData[] | null>(null);
+function PopupPage() {
   const { localTableData, isLocalData } = useLoadTableData();
 
   return (
@@ -16,3 +15,5 @@ export default function DemoPage() {
     </div>
   );
 }
+
+export default PopupPage;

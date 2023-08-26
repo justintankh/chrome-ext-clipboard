@@ -1,6 +1,6 @@
 import tableDataStorage from "@root/src/shared/storages/tableDataStorage";
 import * as React from "react";
-import { TableData } from "../../TableData/columns";
+import { TableData } from "../TableData/columns";
 
 export function useLoadTableData() {
   const [localTableData, setLocalTableData] = React.useState<TableData[]>([]);
