@@ -13,10 +13,17 @@ import {
 } from "@/components/ui/table";
 import { usePageNumber } from "../../hooks/usePageNumber";
 import { Pencil } from "lucide-react";
-import { DataTableProps, handleRowOnClick } from "../helpers";
+import {
+  DataTableProps,
+  handleRowOnClick,
+  onUpDownKeyPress,
+  onEnterKeyPress,
+  onLeftRightKeyPress,
+} from "../helpers";
 import { useCustomTable } from "../../hooks/useCustomTable";
 import { useDispatch } from "react-redux";
 import { Mode, TableReducerActionType } from "../../data/reducer/types";
+import { useEffect } from "react";
 
 export function DataTable<TData, TValue>({
   columns,
@@ -25,7 +32,22 @@ export function DataTable<TData, TValue>({
   const dispatch = useDispatch();
 
   const { table } = useCustomTable({ columns, data });
-  const { pageNumber, updatePageNumber } = usePageNumber(table);
+  const { pageNumber, handlePrevPage, handleNextPage } = usePageNumber(table);
+
+  useEffect(() => {
+    // Bind the event listener
+    document.addEventListener("keydown", (e) => {
+      onUpDownKeyPress(e);
+      onEnterKeyPress(e);
+      onLeftRightKeyPress(e);
+    });
+    return () =>
+      document.removeEventListener("keydown", (e) => {
+        onUpDownKeyPress(e);
+        onEnterKeyPress(e);
+        onLeftRightKeyPress(e);
+      });
+  }, []);
 
   return (
     <div>
@@ -81,9 +103,11 @@ export function DataTable<TData, TValue>({
                     <div className={"copiedTextChild"}>Copied !</div>
                   )}
                   <TableRow
+                    tabIndex={Number(row.id)}
+                    id={`table-row-${row.id}`}
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="hover:bg-red-200 cursor-grab"
+                    className="hover:bg-red-200 focus:bg-red-200 focus:outline-none cursor-grab select-none table-row"
                     onClick={() => {
                       handleRowOnClick(row);
                     }}
@@ -118,23 +142,19 @@ export function DataTable<TData, TValue>({
           </div>
           <div className="flex items-center justify-end space-x-2 py-4">
             <Button
+              id="prev-page-button"
               variant="outline"
               size="sm"
-              onClick={() => {
-                updatePageNumber((prev) => prev - 1);
-                table.previousPage();
-              }}
+              onClick={handlePrevPage}
               disabled={!table.getCanPreviousPage()}
             >
               Previous
             </Button>
             <Button
+              id="next-page-button"
               variant="outline"
               size="sm"
-              onClick={() => {
-                updatePageNumber((prev) => prev + 1);
-                table.nextPage();
-              }}
+              onClick={handleNextPage}
               disabled={!table.getCanNextPage()}
             >
               Next

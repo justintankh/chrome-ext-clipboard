@@ -7,7 +7,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Command } from "cmdk";
-import { CommandIcon } from "lucide-react";
 
 export type InputWithSuggestionsProps = {
   categories: string[];

@@ -3,7 +3,6 @@ import * as React from "react";
 
 export function usePageNumber<T>(table: Table<T>) {
   const FIRST_PAGE = 1;
-  const canNextPage = table.getCanNextPage();
   const canPreviousPage = table.getCanPreviousPage();
   const hasResults = table.getRowModel().rows?.length > 0;
 
@@ -15,6 +14,16 @@ export function usePageNumber<T>(table: Table<T>) {
     setPageNumber(FIRST_PAGE);
   }, [canPreviousPage]);
 
+  const handleNextPage = () => {
+    setPageNumber((prev) => prev + 1);
+    table.nextPage();
+  };
+
+  const handlePrevPage = () => {
+    setPageNumber((prev) => prev - 1);
+    table.previousPage();
+  };
+
   const resolvedPageNumber = hasResults ? pageNumber : 0;
-  return { pageNumber: resolvedPageNumber, updatePageNumber: setPageNumber };
+  return { pageNumber: resolvedPageNumber, handleNextPage, handlePrevPage };
 }

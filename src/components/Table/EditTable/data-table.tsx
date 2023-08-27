@@ -32,6 +32,7 @@ import {
 import { useEditRow } from "./useEditRow";
 import { useContext, useRef } from "react";
 import { TableContext } from "../../data/context";
+import { Tooltip } from "react-tooltip";
 
 export function DataTable<TData, TValue>({
   columns,
@@ -48,13 +49,16 @@ export function DataTable<TData, TValue>({
 
   const { table } = useCustomTable({ columns, data });
   const { RenderEditRow, onDelete } = useEditRow(table);
-  const { pageNumber, updatePageNumber } = usePageNumber(table);
+  const { pageNumber, handlePrevPage, handleNextPage } = usePageNumber(table);
 
   const fileInputRef = useRef(null);
 
   return (
     <div>
       <div className="flex items-center py-4">
+        {/* Tooltip label */}
+        <Tooltip id="saveButtonToolTop"></Tooltip>
+
         <Input
           placeholder="Filter tags..."
           value={(table.getColumn("tag")?.getFilterValue() as string) ?? ""}
@@ -80,6 +84,8 @@ export function DataTable<TData, TValue>({
           onChange={handleImportData}
         />
         <Button
+          data-tooltip-id="saveButtonToolTop"
+          data-tooltip-content="Import"
           variant="outline"
           className="ml-5"
           onClick={() => fileInputRef.current.click()}
@@ -89,6 +95,8 @@ export function DataTable<TData, TValue>({
 
         {/* Download button */}
         <Button
+          data-tooltip-id="saveButtonToolTop"
+          data-tooltip-content="Export"
           variant="outline"
           className="ml-2"
           onClick={handleExportData}
@@ -99,6 +107,8 @@ export function DataTable<TData, TValue>({
 
         {/* Return back to Display Table */}
         <Button
+          data-tooltip-id="saveButtonToolTop"
+          data-tooltip-content="CMD + S"
           variant="outline"
           className="ml-2"
           onClick={() => {
@@ -240,10 +250,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
-                updatePageNumber((prev) => prev - 1);
-                table.previousPage();
-              }}
+              onClick={handlePrevPage}
               disabled={!table.getCanPreviousPage()}
             >
               Previous
@@ -251,10 +258,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
-                updatePageNumber((prev) => prev + 1);
-                table.nextPage();
-              }}
+              onClick={handleNextPage}
               disabled={!table.getCanNextPage()}
             >
               Next
