@@ -1,30 +1,20 @@
-import { Table } from "@tanstack/react-table";
 import { TableCell, TableRow } from "../../ui/table";
 import { Input } from "../../ui/input";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import {
   FocusInput,
-  Mode,
   TableDataNoId,
   TableReducerActionType,
   TableStore,
 } from "../../data/reducer/types";
 import { TableContext } from "../../data/context";
-import { TableData } from "../types";
-import {
-  BadgePlusIcon,
-  BookmarkPlus,
-  CheckCheck,
-  PlusSquare,
-  SearchIcon,
-  Tag,
-} from "lucide-react";
+import { PlusSquare } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { SuggestiveInput } from "./SuggestiveInput";
 import { KeyPress } from "../const";
-import { getRowIdValue, toTitleCase } from "../helpers";
+import { toTitleCase } from "../helpers";
 
-export function useEditRow<T>(table: Table<T>) {
+export function AddRowInputs() {
   const initialData: TableDataNoId = {
     category: "",
     tag: "",
@@ -34,7 +24,7 @@ export function useEditRow<T>(table: Table<T>) {
   const [data, setData] = useState<TableDataNoId>(initialData);
 
   const {
-    methods: { addData, removeData },
+    methods: { addData },
   } = useContext(TableContext);
 
   const dispatch = useDispatch();
@@ -44,20 +34,6 @@ export function useEditRow<T>(table: Table<T>) {
   const categories = useSelector<TableStore, string[]>(
     (state) => state.categories
   );
-
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "s" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        dispatch({
-          type: TableReducerActionType.SET_MODE,
-          payload: Mode.Display,
-        });
-      }
-    };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, []);
 
   function onSubmit(keyPressed: string) {
     if (keyPressed === KeyPress.ENTER) {
@@ -73,36 +49,32 @@ export function useEditRow<T>(table: Table<T>) {
     }
   }
 
-  function onDelete() {
-    const selectedId = table
-      .getSelectedRowModel()
-      .rows.map((row) => getRowIdValue(row));
+  const RerenderSuggestiveInput = useMemo(
+    () => (
+      <SuggestiveInput
+        value={data.category}
+        categories={categories}
+        onChange={(value) =>
+          setData((prev) => ({ ...prev, category: toTitleCase(value) }))
+        }
+        onFocusHotkey={() => {
+          dispatch({
+            type: TableReducerActionType.SET_FOCUS,
+            payload: FocusInput.Category,
+          });
+        }}
+        autoFocus={currentFocus === FocusInput.Category}
+      />
+    ),
+    [categories, currentFocus, data.category]
+  );
 
-    table.toggleAllRowsSelected(false);
-    removeData(selectedId);
-  }
-
-  const RenderEditRow = () => (
+  const AddRowInput = (
     <TableRow>
       <TableCell>
         <PlusSquare className="h-4 w-4 text-black-500" />
       </TableCell>
-      <TableCell>
-        <SuggestiveInput
-          value={data.category}
-          categories={categories}
-          onChange={(value) =>
-            setData((prev) => ({ ...prev, category: toTitleCase(value) }))
-          }
-          onFocusHotkey={() => {
-            dispatch({
-              type: TableReducerActionType.SET_FOCUS,
-              payload: FocusInput.Category,
-            });
-          }}
-          autoFocus={currentFocus === FocusInput.Category}
-        />
-      </TableCell>
+      <TableCell>{RerenderSuggestiveInput}</TableCell>
       <TableCell>
         <Input
           placeholder="tags..."
@@ -146,8 +118,8 @@ export function useEditRow<T>(table: Table<T>) {
     </TableRow>
   );
 
-  return {
-    RenderEditRow,
-    onDelete,
-  };
+  function RerenderAddRowInput() {
+    return AddRowInput;
+  }
+  return { RerenderAddRowInput, AddRowInput };
 }

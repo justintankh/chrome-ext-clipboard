@@ -13,13 +13,7 @@ const RenderTable = () => {
     (state) => state.mode
   );
 
-  return (
-    <>
-      {/* {!isLocalData && <div>Loading...</div>} */}
-      {/* {!isLocalData && <ImportExportPage />} */}
-      {mode === Mode.Display ? <DisplayTable /> : <EditTable />}
-    </>
-  );
+  return <>{mode === Mode.Display ? <DisplayTable /> : <EditTable />}</>;
 };
 
 const Popup = () => {

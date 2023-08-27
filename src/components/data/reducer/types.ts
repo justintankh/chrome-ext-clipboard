@@ -10,6 +10,7 @@ export enum FocusInput {
   Category = "Category",
   Tag = "Tag",
   Value = "Value",
+  null = "null",
 }
 
 export type TableDataNoId = Omit<TableData, "id">;

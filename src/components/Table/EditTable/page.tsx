@@ -1,11 +1,15 @@
 import { columns } from "./columns";
-import { DataTable } from "./data-table";
+import { DataTable } from "./DataTable";
 import { useContext, useEffect } from "react";
 import { TableContext } from "../../data/context";
 import { useColumns } from "../../hooks/useColumns";
-import { onLeftRightKeyPress, onSearchCommand } from "../helpers";
+
+import { useDispatch } from "react-redux";
+import { Mode, TableReducerActionType } from "../../data/reducer/types";
+import { onLeftRightKeyPress, onSearchCommand } from "../keyboardListeners";
 
 function EditTable() {
+  const dispatch = useDispatch();
   const {
     states: { tableData: localTableData },
   } = useContext(TableContext);
@@ -14,6 +18,17 @@ function EditTable() {
     const keyDownListener = (e: KeyboardEvent) => {
       onLeftRightKeyPress(e);
       onSearchCommand(e);
+
+      // Hotkey for Save
+      ((e: KeyboardEvent) => {
+        if (e.key === "s" && (e.metaKey || e.ctrlKey)) {
+          e.preventDefault();
+          dispatch({
+            type: TableReducerActionType.SET_MODE,
+            payload: Mode.Display,
+          });
+        }
+      })(e);
     };
 
     // Bind the event listener

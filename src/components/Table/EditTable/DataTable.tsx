@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import { flexRender } from "@tanstack/react-table";
 
@@ -21,36 +20,34 @@ import {
 import { usePageNumber } from "../../hooks/usePageNumber";
 import { Download, MoreVertical, Save, Upload } from "lucide-react";
 import { getRowIdValue, isAnyRowSelected } from "../helpers";
-import { DataTableProps, TableData } from "../types";
+import { DataTableProps } from "../types";
 import { useCustomTable } from "../../hooks/useCustomTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  FocusInput,
   Mode,
   TableReducerActionType,
   TableStore,
 } from "../../data/reducer/types";
-import { useEditRow } from "./useEditRow";
-import { useContext, useRef } from "react";
+import { AddRowInputs } from "./AddRowInputs";
+import { useContext, useMemo, useRef } from "react";
 import { TableContext } from "../../data/context";
 import { Tooltip } from "react-tooltip";
+import { SearchInput } from "../SearchInput";
+import { DropDownOption } from "./DropDownOption";
 
 export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
   const dispatch = useDispatch();
-  const currentFocus = useSelector<TableStore, TableStore["focusInput"]>(
-    (state) => state.focusInput
-  );
   const {
     methods: { handleImportData, handleExportData },
     states: { tableData },
   } = useContext(TableContext);
 
   const { table } = useCustomTable({ columns, data });
-  const { RenderEditRow, onDelete } = useEditRow(table);
-  const { pageNumber, handlePrevPage, handleNextPage } = usePageNumber(table);
+  const { RenderButtons } = usePageNumber(table);
+  const { RerenderAddRowInput } = AddRowInputs();
 
   const fileInputRef = useRef(null);
 
@@ -59,22 +56,7 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4">
         {/* Tooltip label */}
         <Tooltip id="saveButtonToolTop"></Tooltip>
-        <Input
-          id="filter-input"
-          placeholder="Filter tags..."
-          value={(table.getColumn("tag")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("tag")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-          onFocus={() => {
-            dispatch({
-              type: TableReducerActionType.SET_FOCUS,
-              payload: FocusInput.Filter,
-            });
-          }}
-          autoFocus={currentFocus === FocusInput.Filter}
-        />
+        <SearchInput table={table} disableCommandText={true} />
 
         {/* Upload button */}
         <input
@@ -123,71 +105,7 @@ export function DataTable<TData, TValue>({
         </Button>
 
         {/* Options dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className={
-                isAnyRowSelected(table)
-                  ? "ml-2 bg-neutral-500 text-white"
-                  : "ml-2"
-              }
-            >
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent
-            className={"fontBlack backgroundColour"}
-            align="center"
-          >
-            <DropdownMenuCheckboxItem
-              key={1}
-              checked={false}
-              disabled={true}
-              className={
-                true
-                  ? "editColumnMenuItem-disabled"
-                  : "editColumnMenuItem-active"
-              }
-              onCheckedChange={(value) => {
-                // TODO : Implement deletion
-              }}
-            >
-              {"⭐️ Add"}
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem
-              key={2}
-              checked={false}
-              disabled={true}
-              className={
-                true
-                  ? "editColumnMenuItem-disabled"
-                  : "editColumnMenuItem-active"
-              }
-              onCheckedChange={(value) => {
-                // TODO : Implement deletion
-              }}
-            >
-              {"⭐️ Remove"}
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem
-              key={3}
-              checked={false}
-              disabled={!isAnyRowSelected(table)}
-              className={
-                !isAnyRowSelected(table)
-                  ? "editColumnMenuItem-disabled"
-                  : "editColumnMenuItem-active"
-              }
-              onCheckedChange={() => {
-                onDelete();
-              }}
-            >
-              {"❌ Delete"}
-            </DropdownMenuCheckboxItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DropDownOption table={table} />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -210,7 +128,7 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            <RenderEditRow />
+            <RerenderAddRowInput />
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -250,32 +168,7 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-        <div className="twoColumnGrid">
-          <div className="flex items-center justify-start space-x-2 py-4 pl-2">
-            Total {table.getFilteredRowModel().rows.length} record(s), Page{" "}
-            {pageNumber} of {table.getPageCount()}
-          </div>
-          <div className="flex items-center justify-end space-x-2 py-4">
-            <Button
-              id="prev-page-button"
-              variant="outline"
-              size="sm"
-              onClick={handlePrevPage}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            <Button
-              id="next-page-button"
-              variant="outline"
-              size="sm"
-              onClick={handleNextPage}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
+        <RenderButtons />
       </div>
     </div>
   );

@@ -1,13 +1,13 @@
-import { DataTable } from "./data-table";
+import { DataTable } from "./DataTable";
 import { TableContext } from "../../data/context";
 import { useContext, useEffect } from "react";
 import { useColumns } from "../../hooks/useColumns";
 import {
-  onUpDownKeyPress,
   onEnterKeyPress,
   onLeftRightKeyPress,
   onSearchCommand,
-} from "../helpers";
+  onUpDownKeyPress,
+} from "../keyboardListeners";
 
 function DisplayTable() {
   const {
