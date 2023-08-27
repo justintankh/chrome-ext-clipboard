@@ -1,15 +1,15 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowDownWideNarrow, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TableData } from "../helpers";
+import { TableData } from "../Table/helpers";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "../../ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 import { useDispatch, useSelector } from "react-redux";
-import { TableReducerActionType, TableStore } from "../../data/reducer/types";
+import { TableReducerActionType, TableStore } from "../data/reducer/types";
 
 export const useColumns = () => {
   const dispatch = useDispatch();

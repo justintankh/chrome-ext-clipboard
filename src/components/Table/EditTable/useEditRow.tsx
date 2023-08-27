@@ -10,14 +10,7 @@ import {
 } from "../../data/reducer/types";
 import { TableContext } from "../../data/context";
 import { TableData } from "../helpers";
-import {
-  ArrowBigDownDash,
-  ArrowBigUpDash,
-  ArrowDownSquare,
-  Plus,
-  PlusSquare,
-  Tag,
-} from "lucide-react";
+import { Tag } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 
 export function useEditRow<T>(table: Table<T>) {

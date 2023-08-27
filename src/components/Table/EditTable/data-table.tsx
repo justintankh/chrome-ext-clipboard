@@ -47,7 +47,6 @@ export function DataTable<TData, TValue>({
   } = useContext(TableContext);
 
   const { table } = useCustomTable({ columns, data });
-
   const { RenderEditRow, onDelete } = useEditRow(table);
   const { pageNumber, updatePageNumber } = usePageNumber(table);
 
