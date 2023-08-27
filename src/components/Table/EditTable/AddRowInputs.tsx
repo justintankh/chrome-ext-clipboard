@@ -22,7 +22,6 @@ export function AddRowInputs() {
   };
 
   const [data, setData] = useState<TableDataNoId>(initialData);
-
   const {
     methods: { addData },
   } = useContext(TableContext);
@@ -36,22 +35,42 @@ export function AddRowInputs() {
   );
 
   function onSubmit(keyPressed: string) {
-    if (keyPressed === KeyPress.ENTER) {
-      addData(data);
-      setData(initialData);
-    }
-    // If entered at value, set focus to category
-    if (keyPressed === KeyPress.ENTER && currentFocus === FocusInput.Value) {
-      dispatch({
-        type: TableReducerActionType.SET_FOCUS,
-        payload: FocusInput.Category,
-      });
+    if (keyPressed !== KeyPress.ENTER) return;
+
+    switch (currentFocus) {
+      case FocusInput.Category:
+        // If pressed enter at Category, set focus to value
+        dispatch({
+          type: TableReducerActionType.SET_FOCUS,
+          payload: FocusInput.Tag,
+        });
+        break;
+      case FocusInput.Tag:
+        // If pressed enter at tag, set focus to value
+        dispatch({
+          type: TableReducerActionType.SET_FOCUS,
+          payload: FocusInput.Value,
+        });
+        break;
+      case FocusInput.Value:
+        addData(data);
+        setData(initialData);
+        // If entered at value, set focus to category
+        dispatch({
+          type: TableReducerActionType.SET_FOCUS,
+          payload: FocusInput.Category,
+        });
+        break;
+      case FocusInput.Filter:
+      case FocusInput.null:
+        return;
     }
   }
 
   const RerenderSuggestiveInput = useMemo(
     () => (
       <SuggestiveInput
+        id={FocusInput.Category}
         value={data.category}
         categories={categories}
         onChange={(value) =>
@@ -62,6 +81,9 @@ export function AddRowInputs() {
             type: TableReducerActionType.SET_FOCUS,
             payload: FocusInput.Category,
           });
+        }}
+        onSelected={() => {
+          onSubmit(KeyPress.ENTER);
         }}
         autoFocus={currentFocus === FocusInput.Category}
       />
@@ -77,6 +99,7 @@ export function AddRowInputs() {
       <TableCell>{RerenderSuggestiveInput}</TableCell>
       <TableCell>
         <Input
+          id={FocusInput.Tag}
           placeholder="tags..."
           value={data.tag}
           onChange={(event) =>
@@ -97,6 +120,7 @@ export function AddRowInputs() {
       </TableCell>
       <TableCell>
         <Input
+          id={FocusInput.Value}
           placeholder="value..."
           value={data.value}
           onChange={(event) =>

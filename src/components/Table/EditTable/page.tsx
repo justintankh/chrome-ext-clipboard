@@ -10,6 +10,7 @@ import { onLeftRightKeyPress, onSearchCommand } from "../keyboardListeners";
 
 function EditTable() {
   const dispatch = useDispatch();
+
   const {
     states: { tableData: localTableData },
   } = useContext(TableContext);

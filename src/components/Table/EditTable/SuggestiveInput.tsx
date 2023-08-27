@@ -9,15 +9,25 @@ import {
 import { Command } from "cmdk";
 
 export type SuggestiveInputProps = {
+  id?: string;
   categories: string[];
   value: string;
   onChange: (value: string) => void;
   onFocusHotkey: () => void;
+  onSelected?: () => void;
   autoFocus: boolean;
 };
 
 export function SuggestiveInput(props: SuggestiveInputProps) {
-  const { value, onChange, categories, autoFocus, onFocusHotkey } = props;
+  const {
+    id,
+    value,
+    onChange,
+    categories,
+    autoFocus,
+    onFocusHotkey,
+    onSelected,
+  } = props;
   const [isFocus, setFocus] = React.useState<boolean>(false);
   const listClassName =
     isFocus && value ? "absolute w-full commandList" : "hidden";
@@ -42,6 +52,7 @@ export function SuggestiveInput(props: SuggestiveInputProps) {
     <div>
       <Command className="relative">
         <Command.Input
+          id={id}
           placeholder={isFocus ? "Category.." : "CMD + K"}
           className={inputClassName}
           onValueChange={onChange}
@@ -54,8 +65,8 @@ export function SuggestiveInput(props: SuggestiveInputProps) {
           onBlur={() => setFocus(false)}
         />
         <CommandList className={listClassName}>
-          <CommandEmpty className={itemClassName + " text-neutral-500"}>
-            New category
+          <CommandEmpty className={itemClassName + " text-neutral-500 text-sm"}>
+            {"New Category"}
           </CommandEmpty>
           <CommandGroup>
             {categories.map((status) => (
@@ -66,6 +77,7 @@ export function SuggestiveInput(props: SuggestiveInputProps) {
                   onChange(
                     categories.find((category) => category === value) ?? value
                   );
+                  onSelected();
                 }}
               >
                 {status}

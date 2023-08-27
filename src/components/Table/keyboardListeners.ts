@@ -1,3 +1,4 @@
+import { FocusInput } from "../data/reducer/types";
 import { KeyPress } from "./const";
 import { getCurrentTableRow } from "./helpers";
 

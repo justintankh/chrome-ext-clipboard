@@ -3,13 +3,6 @@ import { Button } from "@/components/ui/button";
 import { flexRender } from "@tanstack/react-table";
 
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import {
   Table,
   TableBody,
   TableCell,
@@ -18,18 +11,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { usePageNumber } from "../../hooks/usePageNumber";
-import { Download, MoreVertical, Save, Upload } from "lucide-react";
-import { getRowIdValue, isAnyRowSelected } from "../helpers";
+import { Download, Save, Upload } from "lucide-react";
+import { getRowIdValue } from "../helpers";
 import { DataTableProps } from "../types";
 import { useCustomTable } from "../../hooks/useCustomTable";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  Mode,
-  TableReducerActionType,
-  TableStore,
-} from "../../data/reducer/types";
+import { useDispatch } from "react-redux";
+import { Mode, TableReducerActionType } from "../../data/reducer/types";
 import { AddRowInputs } from "./AddRowInputs";
-import { useContext, useMemo, useRef } from "react";
+import { useContext, useRef } from "react";
 import { TableContext } from "../../data/context";
 import { Tooltip } from "react-tooltip";
 import { SearchInput } from "../SearchInput";
@@ -68,7 +57,7 @@ export function DataTable<TData, TValue>({
         />
         <Button
           data-tooltip-id="saveButtonToolTop"
-          data-tooltip-content="Import"
+          data-tooltip-content="Import (replace)"
           variant="outline"
           className="ml-5"
           onClick={() => fileInputRef.current.click()}
@@ -79,7 +68,7 @@ export function DataTable<TData, TValue>({
         {/* Download button */}
         <Button
           data-tooltip-id="saveButtonToolTop"
-          data-tooltip-content="Export"
+          data-tooltip-content="Export All"
           variant="outline"
           className="ml-2"
           onClick={handleExportData}
