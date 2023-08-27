@@ -13,17 +13,11 @@ import {
 } from "@/components/ui/table";
 import { usePageNumber } from "../../hooks/usePageNumber";
 import { Pencil } from "lucide-react";
-import {
-  DataTableProps,
-  handleRowOnClick,
-  onUpDownKeyPress,
-  onEnterKeyPress,
-  onLeftRightKeyPress,
-} from "../helpers";
+import { handleRowOnClick } from "../helpers";
+import { DataTableProps } from "../types";
 import { useCustomTable } from "../../hooks/useCustomTable";
 import { useDispatch } from "react-redux";
 import { Mode, TableReducerActionType } from "../../data/reducer/types";
-import { useEffect } from "react";
 
 export function DataTable<TData, TValue>({
   columns,
@@ -34,25 +28,11 @@ export function DataTable<TData, TValue>({
   const { table } = useCustomTable({ columns, data });
   const { pageNumber, handlePrevPage, handleNextPage } = usePageNumber(table);
 
-  useEffect(() => {
-    // Bind the event listener
-    document.addEventListener("keydown", (e) => {
-      onUpDownKeyPress(e);
-      onEnterKeyPress(e);
-      onLeftRightKeyPress(e);
-    });
-    return () =>
-      document.removeEventListener("keydown", (e) => {
-        onUpDownKeyPress(e);
-        onEnterKeyPress(e);
-        onLeftRightKeyPress(e);
-      });
-  }, []);
-
   return (
     <div>
       <div className="flex items-center py-4">
         <Input
+          id="filter-input"
           placeholder="Filter tags..."
           value={(table.getColumn("tag")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
@@ -105,9 +85,9 @@ export function DataTable<TData, TValue>({
                   <TableRow
                     tabIndex={Number(row.id)}
                     id={`table-row-${row.id}`}
+                    className="focus:bg-indigo-200 focus:outline-none cursor-grab select-none table-row"
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="hover:bg-red-200 focus:bg-red-200 focus:outline-none cursor-grab select-none table-row"
                     onClick={() => {
                       handleRowOnClick(row);
                     }}

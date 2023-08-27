@@ -1,20 +1,7 @@
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-
-import { ColumnDef, Row } from "@tanstack/react-table";
+import { Row } from "@tanstack/react-table";
 import { Table } from "@tanstack/table-core";
-
-export type TableData = {
-  id: string;
-  category: string;
-  tag: string;
-  value: string;
-};
-
-export type DataTableProps<TData, TValue> = {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-};
+import { TableData } from "./types";
+import { KeyPress } from "./const";
 
 export function isAnyRowSelected<T>(table: Table<T>): boolean {
   return table.getIsSomeRowsSelected() || table.getIsAllRowsSelected();
@@ -36,6 +23,13 @@ export function handleRowOnClick<TData>(row: Row<TData>) {
   setTimeout(() => {
     row.toggleSelected(false);
   }, 500);
+}
+
+export function toTitleCase(str: string): string {
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
 }
 
 export function sortByNewestFirst(a: string, b: string) {
@@ -65,6 +59,10 @@ export function getCurrentTableRow(
   );
 }
 
+export function getRowIdValue<T>(row: Row<T>): string {
+  return (row.original as TableData).id;
+}
+
 export function onUpDownKeyPress(e: KeyboardEvent) {
   // Initializing number of rows that are displayed
   const elements = document.getElementsByClassName("table-row");
@@ -73,38 +71,36 @@ export function onUpDownKeyPress(e: KeyboardEvent) {
   const prevFocus = getCurrentTableRow(elements);
 
   // Prevent default arrow keys
-  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-    // e.preventDefault();
+  if (e.key === KeyPress.DOWN || e.key === KeyPress.UP) {
+    e.preventDefault();
     // If no row renders, do nothing
     if (numberOfRows === 0) return;
     if (currentFocus === null) currentFocus = 0;
   }
 
   // Initial focus
-  if (
-    (e.key === "ArrowDown" || e.key === "ArrowUp") &&
-    currentFocus === null &&
-    numberOfRows
-  ) {
-    (elements[0] as HTMLElement).focus();
+  if (currentFocus === null && numberOfRows) {
+    if (e.key === KeyPress.DOWN) (elements[0] as HTMLElement).focus();
+    if (e.key === KeyPress.UP)
+      (elements[numberOfRows - 1] as HTMLElement).focus();
     return;
   }
 
   // Move focus up
-  if (e.key === "ArrowUp") {
+  if (e.key === KeyPress.UP) {
     console.log({ before: currentFocus });
     currentFocus = prevFocus === 0 ? numberOfRows - 1 : prevFocus - 1;
     console.log({ after: currentFocus });
   }
   // Move focus down
-  if (e.key === "ArrowDown") {
+  if (e.key === KeyPress.DOWN) {
     console.log({ before: currentFocus });
     currentFocus = prevFocus === numberOfRows - 1 ? 0 : prevFocus + 1;
     console.log({ after: currentFocus });
   }
 
   // Set focus
-  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+  if (e.key === KeyPress.DOWN || e.key === KeyPress.UP) {
     (elements[currentFocus] as HTMLElement).focus();
   }
 }
@@ -116,10 +112,10 @@ export function onEnterKeyPress(e: KeyboardEvent) {
   if (prevFocus === null) return;
 
   // Prevent default for Enter when any row is focused
-  if (e.key === "Enter") {
+  if (e.key === KeyPress.ENTER) {
     e.preventDefault();
     (elements[prevFocus] as HTMLElement).click();
-    window.close();
+    setTimeout(() => window.close(), 100);
   }
 }
 
@@ -134,14 +130,21 @@ export function onLeftRightKeyPress(e: KeyboardEvent) {
   if (prevFocus === null) return;
 
   // Prevent default for Enter when any row is focused
-  if (e.key === "ArrowLeft") {
+  if (e.key === KeyPress.LEFT) {
     e.preventDefault();
     leftButton?.click();
     setTimeout(() => (elements[nextToFocus] as HTMLElement).focus(), 50);
   }
-  if (e.key === "ArrowRight") {
+  if (e.key === KeyPress.RIGHT) {
     e.preventDefault();
     rightButton?.click();
     setTimeout(() => (elements[nextToFocus] as HTMLElement).focus(), 50);
+  }
+}
+
+export function onSearchCommand(e: KeyboardEvent) {
+  if (e.key === "f" && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault();
+    document.getElementById("filter-input").focus();
   }
 }

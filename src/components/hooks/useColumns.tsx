@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowDownWideNarrow, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TableData } from "../Table/helpers";
+import { TableData } from "../Table/types";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -34,7 +34,7 @@ export const useColumns = () => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
-              className={"fontWhite backgroundColour"}
+              className={"fontBlack backgroundColour"}
               align="center"
             >
               {categories.map((cat) => {

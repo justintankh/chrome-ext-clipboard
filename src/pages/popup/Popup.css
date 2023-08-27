@@ -17,7 +17,7 @@
   text-align: center;
 }
 
-.fontWhite {
+.fontBlack {
   color: black;
 }
 
@@ -44,14 +44,16 @@
 
   /* Border is the new background */
   background: none;
-  color: rgb(231, 140, 140);
+  color: rgb(0, 0, 0);
+  /* color: rgb(92, 149, 255); */
   /* color: rgb(231, 140, 140); */
+  font-family: "Courier New", Courier, monospace;
   font-size: larger;
   font-weight: bolder;
 
   /* Rotate from top left corner (not default) */
   transform-origin: 0 0;
-  transform: rotate(-25deg);
+  transform: rotate(-45deg);
 }
 
 /* Edit Table  */

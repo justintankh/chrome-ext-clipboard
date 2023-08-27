@@ -1,4 +1,4 @@
-import { TableData } from "../../Table/helpers";
+import { TableData } from "../../Table/types";
 
 // Types
 export enum Mode {

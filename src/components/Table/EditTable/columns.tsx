@@ -3,7 +3,7 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { TableData } from "../helpers";
+import { TableData } from "../types";
 
 export const columns: ColumnDef<TableData>[] = [
   {

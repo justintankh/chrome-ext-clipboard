@@ -8,16 +8,16 @@ import {
 } from "@/components/ui/command";
 import { Command } from "cmdk";
 
-export type InputWithSuggestionsProps = {
+export type SuggestiveInputProps = {
   categories: string[];
   value: string;
   onChange: (value: string) => void;
-  onHotkeyPress: () => void;
+  onFocusHotkey: () => void;
   autoFocus: boolean;
 };
 
-export function InputWithSuggestions(props: InputWithSuggestionsProps) {
-  const { value, onChange, categories, autoFocus, onHotkeyPress } = props;
+export function SuggestiveInput(props: SuggestiveInputProps) {
+  const { value, onChange, categories, autoFocus, onFocusHotkey } = props;
   const [isFocus, setFocus] = React.useState<boolean>(false);
   const listClassName =
     isFocus && value ? "absolute w-full commandList" : "hidden";
@@ -31,7 +31,7 @@ export function InputWithSuggestions(props: InputWithSuggestionsProps) {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        onHotkeyPress();
+        onFocusHotkey();
       }
     };
     document.addEventListener("keydown", down);
@@ -48,13 +48,13 @@ export function InputWithSuggestions(props: InputWithSuggestionsProps) {
           value={value}
           autoFocus={autoFocus}
           onFocus={() => {
-            onHotkeyPress();
+            onFocusHotkey();
             setFocus(true);
           }}
           onBlur={() => setFocus(false)}
         />
         <CommandList className={listClassName}>
-          <CommandEmpty className={itemClassName + "text-neutral-500"}>
+          <CommandEmpty className={itemClassName + " text-neutral-500"}>
             New category
           </CommandEmpty>
           <CommandGroup>

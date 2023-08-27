@@ -10,10 +10,19 @@ import {
   TableStore,
 } from "../../data/reducer/types";
 import { TableContext } from "../../data/context";
-import { TableData } from "../helpers";
-import { Tag } from "lucide-react";
+import { TableData } from "../types";
+import {
+  BadgePlusIcon,
+  BookmarkPlus,
+  CheckCheck,
+  PlusSquare,
+  SearchIcon,
+  Tag,
+} from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { InputWithSuggestions } from "./CategoryInput";
+import { SuggestiveInput } from "./SuggestiveInput";
+import { KeyPress } from "../const";
+import { getRowIdValue, toTitleCase } from "../helpers";
 
 export function useEditRow<T>(table: Table<T>) {
   const initialData: TableDataNoId = {
@@ -51,12 +60,12 @@ export function useEditRow<T>(table: Table<T>) {
   }, []);
 
   function onSubmit(keyPressed: string) {
-    if (keyPressed === "Enter") {
+    if (keyPressed === KeyPress.ENTER) {
       addData(data);
       setData(initialData);
     }
     // If entered at value, set focus to category
-    if (keyPressed === "Enter" && currentFocus === FocusInput.Value) {
+    if (keyPressed === KeyPress.ENTER && currentFocus === FocusInput.Value) {
       dispatch({
         type: TableReducerActionType.SET_FOCUS,
         payload: FocusInput.Category,
@@ -67,24 +76,25 @@ export function useEditRow<T>(table: Table<T>) {
   function onDelete() {
     const selectedId = table
       .getSelectedRowModel()
-      .rows.map((row) => (row.original as TableData).id);
+      .rows.map((row) => getRowIdValue(row));
 
+    table.toggleAllRowsSelected(false);
     removeData(selectedId);
   }
 
   const RenderEditRow = () => (
     <TableRow>
       <TableCell>
-        <Tag className="h-4 w-4 " />
+        <PlusSquare className="h-4 w-4 text-black-500" />
       </TableCell>
       <TableCell>
-        <InputWithSuggestions
+        <SuggestiveInput
           value={data.category}
           categories={categories}
           onChange={(value) =>
-            setData((prev) => ({ ...prev, category: value }))
+            setData((prev) => ({ ...prev, category: toTitleCase(value) }))
           }
-          onHotkeyPress={() => {
+          onFocusHotkey={() => {
             dispatch({
               type: TableReducerActionType.SET_FOCUS,
               payload: FocusInput.Category,

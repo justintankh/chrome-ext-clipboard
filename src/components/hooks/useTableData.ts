@@ -1,10 +1,10 @@
 import tableDataStorage from "@root/src/shared/storages/tableDataStorage";
 import * as React from "react";
 import {
-  TableData,
   getUniqueCategoriesTableData,
   sortByNewestFirst,
 } from "../Table/helpers";
+import { TableData } from "../Table/types";
 import { TableDataNoId, TableReducerActionType } from "../data/reducer/types";
 import { alertDataType } from "../Options/const";
 import { useDispatch } from "react-redux";
@@ -20,16 +20,22 @@ export function useTableData() {
       tableDataStorage.get().then((data) => {
         setLocalTableData(data);
         console.log("rendered");
-        dispatch({
-          type: TableReducerActionType.SET_CATEGORY,
-          payload: getUniqueCategoriesTableData(data),
-        });
       });
     },
     [
       // Load data from cache on mount
     ]
   );
+
+  React.useEffect(() => {
+    dispatch({
+      type: TableReducerActionType.SET_CATEGORY,
+      payload: getUniqueCategoriesTableData(localTableData),
+    });
+  }, [
+    // Update categories
+    localTableData,
+  ]);
 
   async function handleClearData() {
     console.log("before: ", await tableDataStorage.get());

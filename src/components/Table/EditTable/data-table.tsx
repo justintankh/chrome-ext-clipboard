@@ -20,7 +20,8 @@ import {
 } from "@/components/ui/table";
 import { usePageNumber } from "../../hooks/usePageNumber";
 import { Download, MoreVertical, Save, Upload } from "lucide-react";
-import { DataTableProps, isAnyRowSelected } from "../helpers";
+import { getRowIdValue, isAnyRowSelected } from "../helpers";
+import { DataTableProps, TableData } from "../types";
 import { useCustomTable } from "../../hooks/useCustomTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -58,8 +59,8 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4">
         {/* Tooltip label */}
         <Tooltip id="saveButtonToolTop"></Tooltip>
-
         <Input
+          id="filter-input"
           placeholder="Filter tags..."
           value={(table.getColumn("tag")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
@@ -126,14 +127,18 @@ export function DataTable<TData, TValue>({
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className={isAnyRowSelected(table) ? "ml-2 bg-red-200" : "ml-2"}
+              className={
+                isAnyRowSelected(table)
+                  ? "ml-2 bg-neutral-500 text-white"
+                  : "ml-2"
+              }
             >
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            className={"fontWhite backgroundColour"}
+            className={"fontBlack backgroundColour"}
             align="center"
           >
             <DropdownMenuCheckboxItem
@@ -175,8 +180,7 @@ export function DataTable<TData, TValue>({
                   ? "editColumnMenuItem-disabled"
                   : "editColumnMenuItem-active"
               }
-              onCheckedChange={(value) => {
-                // TODO : Implement deletion
+              onCheckedChange={() => {
                 onDelete();
               }}
             >
@@ -210,9 +214,14 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  key={row.id}
+                  key={getRowIdValue(row)}
                   data-state={row.getIsSelected() && "selected"}
-                  className="hover:bg-red-200 cursor-pointer"
+                  tabIndex={Number(row.id)}
+                  id={`table-row-${row.id}`}
+                  className={
+                    "hover:bg-neutral-500 hover:text-white focus:outline-none cursor-grab select-none table-row " +
+                    (row.getIsSelected() && "bg-neutral-500 text-white")
+                  }
                   onClick={() => {
                     row.toggleSelected(!row.getIsSelected());
                   }}
@@ -248,6 +257,7 @@ export function DataTable<TData, TValue>({
           </div>
           <div className="flex items-center justify-end space-x-2 py-4">
             <Button
+              id="prev-page-button"
               variant="outline"
               size="sm"
               onClick={handlePrevPage}
@@ -256,6 +266,7 @@ export function DataTable<TData, TValue>({
               Previous
             </Button>
             <Button
+              id="next-page-button"
               variant="outline"
               size="sm"
               onClick={handleNextPage}

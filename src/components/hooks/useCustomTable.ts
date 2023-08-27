@@ -9,7 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import React from "react";
-import { DataTableProps } from "../Table/helpers";
+import { DataTableProps } from "../Table/types";
 
 export function useCustomTable<TData, TValue>({
   columns,

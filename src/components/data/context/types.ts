@@ -1,4 +1,4 @@
-import { TableData } from "../../Table/helpers";
+import { TableData } from "../../Table/types";
 import { TableDataNoId } from "../reducer/types";
 
 export type TableContextType = {
