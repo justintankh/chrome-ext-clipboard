@@ -83,6 +83,7 @@ function firstUpperCase(str: string) {
 }
 
 let cacheInvalidationKey: string = generateKey();
+
 function regenerateCacheInvalidationKey() {
   cacheInvalidationKey = generateKey();
   return cacheInvalidationKey;

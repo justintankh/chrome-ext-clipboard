@@ -1,7 +1,6 @@
 import { Input } from "@/components/ui/input";
 
 import { Table } from "@tanstack/react-table";
-import { usePageNumber } from "../../hooks/usePageNumber";
 import { useDispatch, useSelector } from "react-redux";
 import {
   FocusInput,

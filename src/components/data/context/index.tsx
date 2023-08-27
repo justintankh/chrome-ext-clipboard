@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo } from "react";
+import React from "react";
 import { TableContextType } from "./types";
-import { useDispatch, useSelector } from "react-redux";
-import { TableReducerActionType, TableStore } from "../reducer/types";
+import { useSelector } from "react-redux";
+import { TableStore } from "../reducer/types";
 import { useTableData } from "../../hooks/useTableData";
-import { getUniqueCategoriesTableData } from "../../Table/helpers";
 
 export const TableContext = React.createContext<TableContextType>({} as any);
 

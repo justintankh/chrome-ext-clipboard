@@ -1,6 +1,7 @@
 ## Credits to https://github.com/Jonghakseo for the amazing Vite + React boilerplate template
 
 ## Features <a name="features"></a>
+
 - [React 18](https://reactjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Jest](https://jestjs.io/)

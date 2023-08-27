@@ -25,5 +25,6 @@ export default function addHmrIntoView(watchPath: string) {
   function reloadWhenTabIsVisible(): void {
     !document.hidden && pendingReload && reload();
   }
+
   document.addEventListener("visibilitychange", reloadWhenTabIsVisible);
 }

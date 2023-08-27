@@ -1,4 +1,3 @@
-import { FocusInput } from "../data/reducer/types";
 import { KeyPress } from "./const";
 import { getCurrentTableRow } from "./helpers";
 
@@ -6,7 +5,7 @@ export function onUpDownKeyPress(e: KeyboardEvent) {
   // Initializing number of rows that are displayed
   const elements = document.getElementsByClassName("table-row");
   const numberOfRows = elements.length;
-  var currentFocus = getCurrentTableRow(elements);
+  let currentFocus = getCurrentTableRow(elements);
   const prevFocus = getCurrentTableRow(elements);
 
   // Prevent default arrow keys

@@ -7,6 +7,7 @@ export default class MessageInterpreter {
   static send(message: ReloadMessage): SerializedMessage {
     return JSON.stringify(message);
   }
+
   static receive(serializedMessage: SerializedMessage): ReloadMessage {
     return JSON.parse(serializedMessage);
   }

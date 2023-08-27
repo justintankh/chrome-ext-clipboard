@@ -1,7 +1,6 @@
 import { Row } from "@tanstack/react-table";
 import { Table } from "@tanstack/table-core";
 import { TableData } from "./types";
-import { KeyPress } from "./const";
 
 export function isAnyRowSelected<T>(table: Table<T>): boolean {
   return table.getIsSomeRowsSelected() || table.getIsAllRowsSelected();

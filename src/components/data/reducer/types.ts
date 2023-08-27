@@ -5,6 +5,7 @@ export enum Mode {
   Display = "Display",
   Edit = "Edit",
 }
+
 export enum FocusInput {
   Filter = "Filter",
   Category = "Category",

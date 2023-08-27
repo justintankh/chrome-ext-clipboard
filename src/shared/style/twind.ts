@@ -1,4 +1,4 @@
-import { twind, cssom, observe } from "@twind/core";
+import { cssom, observe, twind } from "@twind/core";
 import "construct-style-sheets-polyfill";
 import config from "@root/twind.config";
 
