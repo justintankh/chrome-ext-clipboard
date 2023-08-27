@@ -77,3 +77,12 @@
 .backgroundOnHover:hover {
   background-color: rgb(254 202 202);
 }
+
+/* Category suggestion */
+.commandList {
+  border: 1px solid rgb(165 180 252);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: white;
+  color: black;
+}
